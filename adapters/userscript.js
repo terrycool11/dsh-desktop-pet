@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DSH 桌宠
 // @namespace    https://github.com/terrycool11/dsh-desktop-pet
-// @version      1.1.0
+// @version      1.2.0
 // @description  在页面角落养一只会漂浮、能拖动的 Q 版桌宠，顺手显示 DeepSeek 余额 / 消耗 / Tokens
 // @author       terrycool11
 // @license      MIT

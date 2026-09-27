@@ -12,8 +12,9 @@
 
 ## 它是什么
 
-- **一个 16 KB 的纯 JS 库**（`src/pet.js`），零依赖，UMD，注入任意页面即可出现桌宠
+- **一个 17 KB 的纯 JS 库**（`src/pet.js`），零依赖，UMD，注入任意页面即可出现桌宠
 - **形象可换**：默认给了一张示例立绘；`tools/make-asset.ps1` 能把任意浅色背景立绘变成透明底素材
+- **可以配真人语音**：拖动 / 点击 / 告别时播你自己录的音频（`clips` 选项，库本身不带音频）
 - **数据源可插拔**：接上 `provider` 就显示余额/消耗/Tokens，不接就是纯装饰
 - **三种用法**：网页直接引 / 油猴脚本 / Electron 应用（下面都有）
 
@@ -111,6 +112,8 @@ app.whenReady().then(() => {
 | `clickTexts` | 8 句 | 点击时轮着说的话，改这里就换成你自己的 |
 | `clickResetMs` | `10000` | 点完多久没再点，就恢复原本的余额内容 |
 | `farewellText` | `主人，下次再见吧！` | 退出前告别的话（宿主主动调 `farewell()`） |
+| `clips` | `null` | 真人语音素材：`{ drag: url, click: [url…], farewell: url }`，见下节 |
+| `voice` / `voiceVolume` | `true` / `1` | 是否播放、音量 |
 | `onReady` | `null` | 拿到桌宠实例的回调 |
 
 返回的对象：
@@ -121,7 +124,10 @@ pet.el           // 根元素（想改样式/隐藏就操作它）
 pet.refresh()    // 立刻重新取数据并刷新气泡
 pet.say('文字')   // 说句话（第二个参数 ms 之后恢复原本的余额内容）
 pet.setLine('文字')  // 只显示不进数据、不自动消失（宿主想自己控制时用）
-pet.farewell()   // 告别：显示 farewellText；返回说了哪句
+pet.farewell()   // 告别：显示 farewellText + 播告别语音；返回说了哪句
+pet.play('click', 0)  // 手动播一条语音
+pet.setClips(c)  // 之后挂上/换掉语音素材
+pet.mute(true)   // 静音（气泡照常显示）
 pet.clearSay()   // 立刻恢复原本的余额内容
 pet.show(ms)     // 打开气泡（ms 后自动关；不传则长开）
 pet.hide()       // 关掉气泡
@@ -139,6 +145,36 @@ pet.destroy()    // 移除桌宠并解绑事件
 | 宿主调 `farewell()` | 气泡显示告别语，适合退出前用 |
 
 > 拖动的 4px 阈值是为了不让"手抖的单击"被当成拖动。
+
+---
+
+## 真人语音（可选）
+
+想让它用**真人录音**说话，就把音频地址交给 `clips`：
+
+```js
+DshPet.create({
+  clips: {
+    drag: '/voice/drag.wav',                 // 拖动时播
+    click: ['/voice/c1.wav', '/voice/c2.wav', /* … */],  // 和 clickTexts 同下标
+    farewell: '/voice/bye.wav'               // 告别时播
+  },
+  voice: true            // false 或 pet.mute(true) 就静音，气泡照常显示
+});
+```
+
+几个要点：
+
+- **库本身不带任何音频**，给什么播什么；没给就只显示文字，完全不报错
+- `click[i]` 和 `clickTexts[i]` 是**同一个下标**——第 3 句台词配 `click[2]`。
+  所以**加台词时别忘了同步加音频**，否则那句会没声音
+- 播放用 `<audio>`，同一时刻只留一条（新的一句会掐掉上一句）
+- 库**不做 TTS 合成**：不接 `speechSynthesis`、也不调系统语音。
+  早先试过 Windows SAPI，机器味太重，已弃用；要合成请在宿主侧自己接
+
+> 怎么拿到这些音频？本项目的做法是：把一段按句录好的语音包，用
+> 静音检测切成逐句片段（见 dsh-desktop 的 `.preview/cut_lines.py` 思路），
+> 每句再回环听写校验一遍，确保"文字 ↔ 音频"一一对应。
 > 台词只显示、**不出声**：试过用系统 TTS 念，机器味太重，已经去掉了。
 
 ---
