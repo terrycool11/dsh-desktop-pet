@@ -1,0 +1,39 @@
+{
+  "name": "dsh-desktop-pet",
+  "version": "1.0.0",
+  "description": "一只住进网页角落的 Q 版桌宠：会漂浮、能拖动、顺手显示 DeepSeek 余额 / 消耗 / Tokens",
+  "main": "src/pet.js",
+  "files": [
+    "src",
+    "adapters",
+    "assets/chibi-full.png",
+    "demo",
+    "tools",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "demo": "node -e \"console.log('用浏览器打开 demo/index.html 即可')\""
+  },
+  "keywords": [
+    "desktop-pet",
+    "mascot",
+    "deepseek",
+    "dsh",
+    "electron",
+    "userscript",
+    "anime",
+    "chibi"
+  ],
+  "author": "terrycool11",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terrycool11/dsh-desktop-pet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/terrycool11/dsh-desktop-pet/issues"
+  },
+  "homepage": "https://github.com/terrycool11/dsh-desktop-pet#readme"
+}
