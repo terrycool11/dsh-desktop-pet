@@ -200,6 +200,14 @@ function bootstrap(cfg) {
       provider: (bridge && bridge.stats) ? function () { return bridge.stats(); } : null,
       refreshMs: 30000
     }));
+
+    // 退出前告别：主进程可以调它把台词显示进气泡，停一下再退
+    window.__dshPetSay = function (text) {
+      try { window.__dshPet.setLine(text, 0); window.__dshPet.show(); return true; } catch (e) { return false; }
+    };
+    window.__dshPetFarewell = function (text) {
+      try { return window.__dshPet.farewell(text); } catch (e) { return ''; }
+    };
     return 'ok';
   })().catch(function () { return 'error'; });
 }

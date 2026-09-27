@@ -1,6 +1,6 @@
 {
   "name": "dsh-desktop-pet",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "一只住进网页角落的 Q 版桌宠：会漂浮、能拖动、顺手显示 DeepSeek 余额 / 消耗 / Tokens",
   "main": "src/pet.js",
   "files": [
